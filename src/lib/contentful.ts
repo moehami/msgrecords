@@ -30,7 +30,7 @@ export async function getCategories(): Promise<Category[]> {
         url: `https:${item.fields.image.fields.file.url}`,
         title: item.fields.image.fields.title,
       } : null,
-      postsCount: item.fields.posts?.length || 0,
+      postsCount: item.fields.posts?.length,
     }));
 
     console.log('Processed categories:', categories); // Debug log

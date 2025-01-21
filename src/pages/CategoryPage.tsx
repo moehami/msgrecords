@@ -88,6 +88,8 @@ export function CategoryPage() {
             key={post.id}
             className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
           >
+             <Link 
+      to={`/post/${post.slug}`}>
             <div className="aspect-w-16 aspect-h-9">
               <img
                 src={post.imagecover.url}
@@ -96,12 +98,13 @@ export function CategoryPage() {
               />
             </div>
             <div className="p-6">
+            
               <h2 className="text-xl font-bold text-gray-800 mb-2">{post.title}</h2>
               <p className="text-gray-600 mb-4">{post.description}</p>
               <time className="text-gray-500 text-sm">
               {formatDate(post.date)}          
               </time>
-            </div>
+            </div></Link>
           </div>
         ))}
       </div>
