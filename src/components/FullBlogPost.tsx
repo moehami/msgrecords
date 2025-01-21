@@ -1,23 +1,15 @@
 // src/components/FullBlogPost.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchBlogPosts } from '../contentful';
+import { fetchBlogPosts  } from '../lib/contentful';
 import { BlogPost as BlogPostType } from '../types';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, MARKS } from '@contentful/rich-text-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faClock } from '@fortawesome/free-solid-svg-icons';
+import { Helmet } from 'react-helmet';
 
-const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
 
-useEffect(() => {
-  if (post?.sections?.length) {
-    getPostsBySection(post.sections[0]).then((related) => {
-      console.log('Related Posts:', related); // Debug related posts
-      setRelatedPosts(related); // Store related posts in state
-    });
-  }
-}, [post]);
 
 
 interface RouteParams {
@@ -30,10 +22,7 @@ const FullBlogPost: React.FC = () => {
 
   useEffect(() => {
     fetchBlogPosts().then((posts) => {
-      console.log('Posts:', posts); // Log all posts
       const foundPost = posts.find((p) => p.slug === slug);
-      console.log('Fetched Post:', foundPost); // Debug the fetched post object
-
       setPost(foundPost || null);
     });
   }, [slug]);
@@ -41,7 +30,6 @@ const FullBlogPost: React.FC = () => {
   if (!post) {
     return <p className="text-center text-red-600">Blog post not found</p>;
   }
-
 
   const options = {
     renderMark: {
@@ -66,7 +54,7 @@ const FullBlogPost: React.FC = () => {
       [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
         const { file, title } = node.data.target.fields;
         return <img className="w-full h-auto rounded-lg shadow-lg mb-6" src={`https:${file.url}`} alt={title} />;
-      }
+      },
     },
   };
 
@@ -78,9 +66,10 @@ const FullBlogPost: React.FC = () => {
     return `${year}-${month}-${day}`;
   };
 
-    
-
+  
   return (
+
+
     <div className="max-w-4xl mx-auto px-4 py-20">
       <img src={post.imagecover} alt={post.title} className="w-full h-auto rounded-lg shadow-lg mb-6" />
       <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
@@ -93,35 +82,20 @@ const FullBlogPost: React.FC = () => {
         {documentToReactComponents(post.content, options)}
       </div>
       <div>
-        
-      <div className="mt-10">
-  <h2 className="text-2xl font-semibold mb-4">Related Posts</h2>
-  {relatedPosts.length > 0 ? (
-    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {relatedPosts.map((relatedPost) => (
-        <li key={relatedPost.id} className="border rounded-lg shadow-md p-4">
-          <a href={`/blog/${relatedPost.slug}`} className="text-lg font-medium hover:underline">
-            {relatedPost.title}
-          </a>
-          <img
-            src={relatedPost.imagecover}
-            alt={relatedPost.title}
-            className="w-full h-auto rounded-md mt-2"
-          />
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p className="text-gray-500">No related posts found.</p>
-  )}
-</div>
-
-
-
+        {post.sections && post.sections.length > 0 && (
+          <div>
+            <h4>Categories:</h4>
+            <ul>
+              {post.sections.map((section) => (
+                <li key={section}>{section}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
+      {/* Add RelatedPosts Component Here */}
+      
     </div>
-
-
   );
 };
 

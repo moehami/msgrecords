@@ -1,6 +1,6 @@
 // src/components/BlogPost.tsx
 import React, { useState, useEffect } from 'react';
-import { fetchBlogPosts } from '../contentful';
+import { fetchBlogPosts } from '../lib/contentful';
 import { BlogPost as BlogPostType } from '../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';

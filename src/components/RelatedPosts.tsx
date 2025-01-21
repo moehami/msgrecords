@@ -1,40 +1,126 @@
 // src/components/RelatedPosts.tsx
 import React, { useState, useEffect } from 'react';
-import { fetchRelatedPosts } from '../contentful';
-import { BlogPost as BlogPostType } from '../types';
 import { Link } from 'react-router-dom';
+import { fetchBlogPosts } from '../lib/contentful';
+import { BlogPost, RelatedPost } from '../types';
 
-const RelatedPosts: React.FC<{ tags: string[] }> = ({ tags }) => {
-  const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
+interface RelatedPostsProps {
+  postId: string;
+  currentSections?: string[];
+}
+
+const RelatedPosts: React.FC<RelatedPostsProps> = ({ postId }) => {
+  const [relatedPosts, setRelatedPosts] = useState<RelatedPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (tags.length > 0) {
-      fetchRelatedPosts(tags).then((posts) => {
-        console.log('Related Posts:', posts); // Log related posts
-        setRelatedPosts(posts);
-      });
-    }
-  }, [tags]);
+    const loadRelatedPosts = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        console.log('Fetching posts for postId:', postId);
+        const allPosts = await fetchBlogPosts();
+        console.log('All posts:', allPosts);
+        
+        const currentPost = allPosts.find(post => post.id === postId);
+        console.log('Current post:', currentPost);
+        
+        if (!currentPost) {
+          console.error('Current post not found');
+          setError('Current post not found');
+          setRelatedPosts([]);
+          return;
+        }
 
+        if (!currentPost.sections || currentPost.sections.length === 0) {
+          console.log('No sections found for current post');
+          setError('No sections available');
+          setRelatedPosts([]);
+          return;
+        }
+
+        console.log('Current post sections:', currentPost.sections);
+
+        // Filter posts that share at least one section with the current post
+        const related = allPosts
+          .filter(post => {
+            const hasMatchingSection = post.id !== postId && 
+              post.sections?.some(section => 
+                currentPost.sections.includes(section)
+              );
+            console.log(`Post ${post.id} matching sections:`, hasMatchingSection);
+            return hasMatchingSection;
+          })
+          .map(post => ({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            summary: post.description,
+            thumbnail: post.imagecover
+          }))
+          .slice(0, 3);
+
+        console.log('Related posts:', related);
+        setRelatedPosts(related);
+      } catch (error) {
+        console.error('Error fetching related posts:', error);
+        setError('Error fetching related posts');
+        setRelatedPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (postId) {
+      loadRelatedPosts();
+    }
+  }, [postId]);
+
+  // Always render something for debugging
   return (
-    <div className="related-posts mt-8">
-      <h3 className="text-2xl font-semibold mb-4">Related Posts</h3>
-      {relatedPosts.length === 0 ? (
-        <p>No related posts found.</p>
-      ) : (
-        <ul className="list-disc list-inside space-y-2">
-          {relatedPosts.map((post) => (
-            <li key={post.id} className="bg-gray-100 p-4 rounded-md shadow-md">
-              <Link to={`/post/${post.slug}`}>
-                <img src={post.imageCover} alt={post.title} className="w-full h-auto rounded-lg mb-2" />
-                <h4 className="text-xl font-bold">{post.title}</h4>
-                <p className="text-gray-600">{post.description}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <section className="mt-8">
+      <h2 className="text-2xl font-bold mb-4">Related Posts</h2>
+      
+      {isLoading && (
+        <div className="text-gray-600">Loading related posts...</div>
       )}
-    </div>
+
+      {error && (
+        <div className="text-red-600">Debug info: {error}</div>
+      )}
+
+      {!isLoading && !error && relatedPosts.length === 0 && (
+        <div className="text-gray-600">No related posts found</div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {relatedPosts.map((post) => (
+          <Link 
+            key={post.id}
+            to={`/blog/${post.slug}`}
+            className="group hover:transform hover:scale-105 transition-transform duration-200"
+          >
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <img 
+                src={post.thumbnail} 
+                alt={post.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-blue-600">
+                  {post.title}
+                </h3>
+                <p className="text-gray-600 text-sm line-clamp-2">
+                  {post.summary}
+                </p>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 };
 

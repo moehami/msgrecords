@@ -1,35 +1,34 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import FullBlogPost from './components/FullBlogPost';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import Page from './components/Page';
+import FullBlogPost from'./components/FullBlogPost';
 import { Navigation } from "./components/Navigation";
+import { Footer } from "./components/Footer";
+
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 
-const queryClient = new QueryClient();
+const App: React.FC = () => {
+  return (
+    <HelmetProvider>
+      <Router>
+      <Navigation />
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Navigation />
         <Routes>
-          <Route path="/" element={<Index />} />
+        <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/post/:slug" element={<Page />} />
           <Route path="/post/:slug" Component={FullBlogPost} />
-        </Routes>
-      </BrowserRouter>
 
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+        </Routes>
+      </Router>
+    </HelmetProvider>
+  );
+};
 
 export default App;
