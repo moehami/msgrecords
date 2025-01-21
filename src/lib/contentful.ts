@@ -1,12 +1,79 @@
 // src/lib/contentful.ts
 import { createClient } from 'contentful';
-import { BlogPost } from '../types';
+import { BlogPost, Category } from '../types';
 
 const client = createClient({
   space: '1lyuebj06qbb',
   accessToken: 'DmyN15b5IzIRR16F8NxLB5NtnuCCDkmdTeJTxllv9XQ',
 });
+// In contentful.ts, add logging
+export async function getCategories(): Promise<Category[]> {
+  try {
+    const response = await client.getEntries({
+      content_type: 'category',
+      include: 2,
+    });
+    
+    console.log('Contentful response:', response); // Debug log
+    
+    if (!response.items) {
+      console.error('No items in response');
+      return [];
+    }
 
+    const categories = response.items.map((item: any) => ({
+      id: item.sys.id,
+      title: item.fields.title,
+      slug: item.fields.slug,
+      description: item.fields.description,
+      image: item.fields.image?.fields ? {
+        url: `https:${item.fields.image.fields.file.url}`,
+        title: item.fields.image.fields.title,
+      } : null,
+      postsCount: item.fields.posts?.length || 0,
+    }));
+
+    console.log('Processed categories:', categories); // Debug log
+    return categories;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
+}
+export async function getPostsByCategory(categorySlug: string): Promise<BlogPost[]> {
+  const response = await client.getEntries({
+    content_type: 'blogPosts',
+
+    'fields.category.sys.contentType.sys.id': 'category',
+    'fields.category.fields.slug': categorySlug,
+    order: '-fields.date',
+    include: 2,
+  });
+  return response.items.map((item: any) => ({
+    id: item.sys.id,
+    title: item.fields.title,
+    slug: item.fields.slug,
+    description: item.fields.description,
+    content: item.fields.content,
+    date: item.fields.date,
+    category: {
+      id: item.fields.category.sys.id,
+      title: item.fields.category.fields.title,
+      slug: item.fields.category.fields.slug,
+      description: item.fields.category.fields.description,
+      image: {
+        url: `https:${item.fields.category.fields.image.fields.file.url}`,
+        title: item.fields.category.fields.image.fields.title,
+      },
+      postsCount: 0,
+    },
+    imagecover: {
+      url: `https:${item.fields.imagecover.fields.file.url}`,
+      
+      title: item.fields.imagecover.fields.title,
+    },
+  }));
+}
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
   try {
     const entries = await client.getEntries({
@@ -53,31 +120,6 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
     });
   } catch (error) {
     console.error('Error fetching blog posts:', error);
-    throw error;
-  }
-}
-
-export async function fetchRelatedPosts(sections: string[]): Promise<RelatedPost[]> {
-  if (!sections || sections.length === 0) {
-    return [];
-  }
-
-  try {
-    const entries = await client.getEntries({
-      content_type: 'blogPosts',
-      'fields.sections.fields.name[in]': sections.join(','),
-      limit: 5,
-    });
-
-    return entries.items.map((item: any) => ({
-      id: item.sys.id,
-      title: item.fields.title,
-      slug: item.fields.slug,
-      summary: item.fields.description,
-      thumbnail: `https:${item.fields.imagecover.fields.file.url}`,
-    }));
-  } catch (error) {
-    console.error('Error fetching related posts:', error);
     throw error;
   }
 }

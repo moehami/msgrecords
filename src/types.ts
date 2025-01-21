@@ -1,10 +1,9 @@
 // src/types.ts
 export interface BlogPost {
-  sections: any;
+  category: Category;
   id: string;
   slug: string; // Ensure slug is included
   section: string; 
-  imagecover: string;
   author: string;
   authorAvatar: string;
   date: string;
@@ -12,4 +11,19 @@ export interface BlogPost {
   title: string;
   description: string;
   content: string;
+  imagecover: {
+    url: string;
+    title: string;
+  };
 }
+type Category = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  image: {
+    url: string;
+    title: string;
+  };
+  postsCount: number;
+};

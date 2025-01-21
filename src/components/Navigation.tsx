@@ -16,8 +16,10 @@ export function Navigation() {
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">
             <Link to="/" className="text-gray-700 hover:text-gray-900 transition-colors">Home</Link>
+            
             <Link to="/about" className="text-gray-700 hover:text-gray-900 transition-colors">About</Link>
             <Link to="/terms" className="text-gray-700 hover:text-gray-900 transition-colors">Terms</Link>
+            <Link to="/disclaimer" className="text-gray-700 hover:text-gray-900 transition-colors">Disclaimer</Link>
             <Link to="/privacy" className="text-gray-700 hover:text-gray-900 transition-colors">Privacy Policy</Link>
           </div>
 
