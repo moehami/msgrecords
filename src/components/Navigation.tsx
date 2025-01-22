@@ -25,10 +25,22 @@ export function Navigation() {
               Home
             </Link>
             <Link 
+              to="/blog" 
+              className="relative text-gray-700 hover:text-gray-900 transition-colors after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
+            >
+              Blog
+            </Link>
+            <Link 
               to="/about" 
               className="relative text-gray-700 hover:text-gray-900 transition-colors after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
             >
               About
+            </Link>
+            <Link 
+              to="/disclaimer" 
+              className="relative text-gray-700 hover:text-gray-900 transition-colors after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
+            >
+                    Disclaimer
             </Link>
             <Link 
               to="/terms" 
@@ -66,6 +78,13 @@ export function Navigation() {
                 Home
               </Link>
               <Link 
+                to="/blog" 
+                className="text-gray-700 hover:text-gray-900 transition-colors hover:translate-x-1 transform duration-200 ease-in-out" 
+                onClick={() => setIsOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link 
                 to="/about" 
                 className="text-gray-700 hover:text-gray-900 transition-colors hover:translate-x-1 transform duration-200 ease-in-out" 
                 onClick={() => setIsOpen(false)}
@@ -78,6 +97,13 @@ export function Navigation() {
                 onClick={() => setIsOpen(false)}
               >
                 Terms
+              </Link>
+              <Link 
+                to="/disclaimer" 
+                className="text-gray-700 hover:text-gray-900 transition-colors hover:translate-x-1 transform duration-200 ease-in-out" 
+                onClick={() => setIsOpen(false)}
+              >
+                     Disclaimer
               </Link>
               <Link 
                 to="/privacy" 

@@ -20,8 +20,8 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <p className="text-sm text-muted-foreground">
-              Email: support@msgrecords.com<br />
-         
+              Email: contact@msgrecords.com<br />
+              Phone: (555) 123-4567
             </p>
           </div>
         </div>

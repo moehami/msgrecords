@@ -5,7 +5,6 @@ import Page from './components/Page';
 import FullBlogPost from'./components/FullBlogPost';
 import { Navigation } from "./components/Navigation";
 import { Footer } from "./components/Footer";
-
 import { CategoriesPage } from './pages/CategoriesPage';
 import { CategoryPage } from './pages/CategoryPage';
 
@@ -39,10 +38,8 @@ const App: React.FC = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/post/:slug" element={<Page />} />
           <Route path="/post/:slug" Component={FullBlogPost} />
-
-        </Routes>
-        <Footer />
-
+        
+        </Routes>  <Footer />
       </Router>
     </HelmetProvider>
   );
