@@ -39,9 +39,10 @@ const App: React.FC = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/post/:slug" element={<Page />} />
           <Route path="/post/:slug" Component={FullBlogPost} />
-          <Footer />
 
         </Routes>
+        <Footer />
+
       </Router>
     </HelmetProvider>
   );
