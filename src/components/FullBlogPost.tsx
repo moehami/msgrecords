@@ -82,12 +82,12 @@ const FullBlogPost: React.FC = () => {
         {documentToReactComponents(post.content, options)}
       </div>
       <div>
-        {post.sections && post.sections.length > 0 && (
+        {post.category && post.category.length > 0 && (
           <div>
             <h4>Categories:</h4>
             <ul>
-              {post.sections.map((section) => (
-                <li key={section}>{section}</li>
+              {post.category.map((category) => (
+                <li key={post.category}>{post.category}</li>
               ))}
             </ul>
           </div>

@@ -40,15 +40,18 @@ export async function getCategories(): Promise<Category[]> {
     throw error;
   }
 }
-export async function getPostsByCategory(categorySlug: string): Promise<BlogPost[]> {
+export async function getPostsByCategory({ categorySlug }: { categorySlug: string; }): Promise<BlogPost[]> {
   const response = await client.getEntries({
-    content_type: 'blogPosts',
-
-    'fields.category.sys.contentType.sys.id': 'category',
-    'fields.category.fields.slug': categorySlug,
-    order: '-fields.date',
-    include: 2,
+    content_type: 'blogPosts', // Main content type
+    'fields.category.sys.contentType.sys.id': 'category', // Ensure the reference type is specified
+    'fields.category.fields.slug': categorySlug, // Match the slug
+    order: '-fields.date', // Sort by date
+    include: 2, // Include referenced fields
   });
+ 
+
+
+  
   return response.items.map((item: any) => ({
     id: item.sys.id,
     title: item.fields.title,
@@ -102,7 +105,8 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
       }
 
 
-      const author = item.fields.author.fields;
+  const author = item.fields.author.fields;
+  const category = item.fields.category?.fields;
 
       return {
         id: item.sys.id,
@@ -113,9 +117,13 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
         date: item.fields.date,
         readtime: item.fields.readtime,
         title: item.fields.title,
-        description: item.fields.description,
+        category: category ? { 
+          title: category.title, 
+          slug: category.slug 
+        } : null,
+                description: item.fields.description,
         content: item.fields.content,
-        sections: sections,
+     
       };
     });
   } catch (error) {

@@ -15,7 +15,7 @@ export function CategoryPage() {
       if (!slug) return;
       
       try {
-        const data = await getPostsByCategory(slug);
+        const data = await getPostsByCategory({ categorySlug: slug });
         setPosts(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch posts');

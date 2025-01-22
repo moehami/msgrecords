@@ -15,12 +15,7 @@ export function Navigation() {
           >
             MSG Records
           </Link>
-          <Link 
-                to="/categories" 
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                View Categories
-              </Link>
+
           
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">

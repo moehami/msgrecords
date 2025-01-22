@@ -1,6 +1,6 @@
 // src/types.ts
 export interface BlogPost {
-  category: Category;
+  category: string;
   id: string;
   slug: string; // Ensure slug is included
   section: string; 
@@ -16,7 +16,7 @@ export interface BlogPost {
     title: string;
   };
 }
-type Category = {
+export type Category = {
   id: string;
   title: string;
   slug: string;

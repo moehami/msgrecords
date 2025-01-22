@@ -4,6 +4,7 @@ import { getCategories } from '../lib/contentful';
 import type { Category } from '../types';
 import { CategoryCard } from '../components/CategoryCard';
 
+
 export function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ export function CategoriesPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen ">
         <div className="text-red-500">Error: {error}</div>
       </div>
     );

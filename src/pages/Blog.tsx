@@ -1,12 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchBlogPosts } from '@/lib/contentful';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
+import { useQuery } from "@tanstack/react-query";
+import { fetchBlogPosts } from "@/lib/contentful";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { Link } from "react-router-dom";
 
 const Blog = () => {
   const { data: posts, isLoading } = useQuery({
-    queryKey: ['blog-posts'],
+    queryKey: ["blog-posts"],
     queryFn: fetchBlogPosts,
   });
 
@@ -30,24 +32,28 @@ const Blog = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {posts?.map((post) => (
           <Card key={post.slug} className="glass-card hover-lift">
-            {post.featuredImage && (
-              <img
-                src={post.featuredImage.fields.file.url}
+            {post.imagecover && (
+            <Link to={post.slug} >  <img
+                src={post.imagecover}
                 alt={post.title}
                 className="w-full h-48 object-cover rounded-t-lg"
-              />
+              /></Link>
             )}
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant="secondary">{post.category}</Badge>
+                <Badge variant="secondary">{post.category?.title || 'Uncategorized'}</Badge>
+                
               </div>
-              <CardTitle className="text-xl">{post.title}</CardTitle>
+              <CardTitle className="text-xl"><Link to={`/post/${post.slug}`} >{post.title}</Link></CardTitle>
               <p className="text-sm text-muted-foreground">
-                {format(new Date(post.publishDate), 'MMMM dd, yyyy')}
+                {format(new Date(post.date), "MMMM dd, yyyy")}
               </p>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground line-clamp-3">{post.content}</p>
+              {/* Render rich text content */}
+              <div className="text-muted-foreground line-clamp-3">
+                {documentToReactComponents(post.content)}
+              </div>
             </CardContent>
           </Card>
         ))}
