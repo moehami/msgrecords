@@ -6,7 +6,7 @@ const client = createClient({
   space: '1lyuebj06qbb',
   accessToken: 'DmyN15b5IzIRR16F8NxLB5NtnuCCDkmdTeJTxllv9XQ',
 });
-// In contentful.ts, add logging
+
 export async function getCategories(): Promise<Category[]> {
   try {
     const response = await client.getEntries({
@@ -21,17 +21,22 @@ export async function getCategories(): Promise<Category[]> {
       return [];
     }
 
-    const categories = response.items.map((item: any) => ({
-      id: item.sys.id,
-      title: item.fields.title,
-      slug: item.fields.slug,
-      description: item.fields.description,
-      image: item.fields.image?.fields ? {
-        url: `https:${item.fields.image.fields.file.url}`,
-        title: item.fields.image.fields.title,
-      } : null,
-      postsCount: item.fields.posts?.length,
-    }));
+    const categories = response.items.map((item: any) => {
+      const postsCount = item.fields.posts ? item.fields.posts.length : 0;
+      console.log(`Category: ${item.fields.title}, Posts Count: ${postsCount}`); // Log each category and post count
+
+      return {
+        id: item.sys.id,
+        title: item.fields.title,
+        slug: item.fields.slug,
+        description: item.fields.description,
+        image: item.fields.image?.fields ? {
+          url: `https:${item.fields.image.fields.file.url}`,
+          title: item.fields.image.fields.title,
+        } : null,
+        postsCount: postsCount,
+      };
+    });
 
     console.log('Processed categories:', categories); // Debug log
     return categories;
@@ -40,7 +45,8 @@ export async function getCategories(): Promise<Category[]> {
     throw error;
   }
 }
-export async function getPostsByCategory({ categorySlug }: { categorySlug: string; }): Promise<BlogPost[]> {
+
+export async function getPostsByCategory({ categorySlug }: { categorySlug: string }): Promise<BlogPost[]> {
   const response = await client.getEntries({
     content_type: 'blogPosts', // Main content type
     'fields.category.sys.contentType.sys.id': 'category', // Ensure the reference type is specified
@@ -48,10 +54,7 @@ export async function getPostsByCategory({ categorySlug }: { categorySlug: strin
     order: '-fields.date', // Sort by date
     include: 2, // Include referenced fields
   });
- 
 
-
-  
   return response.items.map((item: any) => ({
     id: item.sys.id,
     title: item.fields.title,
@@ -72,11 +75,11 @@ export async function getPostsByCategory({ categorySlug }: { categorySlug: strin
     },
     imagecover: {
       url: `https:${item.fields.imagecover.fields.file.url}`,
-      
       title: item.fields.imagecover.fields.title,
     },
   }));
 }
+
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
   try {
     const entries = await client.getEntries({
@@ -84,29 +87,21 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
       include: 1,
     });
 
-    // Log the complete first entry to see its structure
+    console.log('First blog post entry:', entries.items[0]);
 
     return entries.items.map((item: any) => {
- 
-
       let sections: string[] = [];
 
-      // More detailed section logging
       if (item.fields.sections) {
-
-        
         if (Array.isArray(item.fields.sections)) {
-          sections = item.fields.sections.map((section: any) => {
-            return section.fields?.name || section;
-          }).filter(Boolean);
+          sections = item.fields.sections.map((section: any) => section.fields?.name || section).filter(Boolean);
         } else if (typeof item.fields.sections === 'string') {
           sections = [item.fields.sections];
         }
       }
 
-
-  const author = item.fields.author.fields;
-  const category = item.fields.category?.fields;
+      const author = item.fields.author.fields;
+      const category = item.fields.category?.fields;
 
       return {
         id: item.sys.id,
@@ -121,9 +116,8 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
           title: category.title, 
           slug: category.slug 
         } : null,
-                description: item.fields.description,
+        description: item.fields.description,
         content: item.fields.content,
-     
       };
     });
   } catch (error) {

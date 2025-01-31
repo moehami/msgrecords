@@ -46,7 +46,7 @@ export function CategoryPage() {
 
   if (posts.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-20">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">No posts found</h1>
           <Link 
@@ -70,7 +70,7 @@ export function CategoryPage() {
     return `${year}-${month}-${day}`;
   };
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-20">
       <div className="mb-8">
         <Link 
           to="/categories" 

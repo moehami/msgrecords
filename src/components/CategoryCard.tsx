@@ -16,7 +16,6 @@ export function CategoryCard({ category }: CategoryCardProps) {
       to={`/category/${category.slug}`}
       className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow"
     >
-
       <div className="aspect-w-16 aspect-h-9">
         {category.image && (
           <img
@@ -30,7 +29,6 @@ export function CategoryCard({ category }: CategoryCardProps) {
         <div className="absolute bottom-0 p-6">
           <h3 className="text-2xl font-bold text-white mb-2">{category.title}</h3>
           <p className="text-white/80 mb-2">{category.description}</p>
-          <span className="text-white/60">{category.postsCount} posts</span>
         </div>
       </div>
     </Link>

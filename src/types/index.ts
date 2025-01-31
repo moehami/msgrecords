@@ -16,7 +16,7 @@ export interface BlogPost {
       title: string;
     };
   }
-  type Category = {
+  export type Category = {
     id: string;
     title: string;
     slug: string;

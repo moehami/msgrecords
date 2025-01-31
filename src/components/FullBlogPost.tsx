@@ -93,7 +93,8 @@ const FullBlogPost: React.FC = () => {
           </div>
         )}
       </div>
-      {/* Add RelatedPosts Component Here */}
+      {/* Add RelatedPosts Component Here */
+      }
       
     </div>
   );
