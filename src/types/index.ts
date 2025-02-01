@@ -15,8 +15,10 @@ export interface BlogPost {
       url: string;
       title: string;
     };
+    RelatedPost: string;
   }
   export type Category = {
+    length: number;
     id: string;
     title: string;
     slug: string;

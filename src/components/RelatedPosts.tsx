@@ -34,21 +34,21 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ postId }) => {
           return;
         }
 
-        if (!currentPost.sections || currentPost.sections.length === 0) {
+        if (!currentPost.section || currentPost.section.length === 0) {
           console.log('No sections found for current post');
           setError('No sections available');
           setRelatedPosts([]);
           return;
         }
 
-        console.log('Current post sections:', currentPost.sections);
+        console.log('Current post sections:', currentPost.section);
 
         // Filter posts that share at least one section with the current post
         const related = allPosts
           .filter(post => {
             const hasMatchingSection = post.id !== postId && 
-              post.sections?.some(section => 
-                currentPost.sections.includes(section)
+              post.section?.some(section => 
+                currentPost.section.includes(section)
               );
             console.log(`Post ${post.id} matching sections:`, hasMatchingSection);
             return hasMatchingSection;

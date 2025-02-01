@@ -74,7 +74,7 @@ const FullBlogPost: React.FC = () => {
       <img src={post.imagecover} alt={post.title} className="w-full h-auto rounded-lg shadow-lg mb-6" />
       <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
       <div className="flex items-center text-gray-600 mb-4">
-        By <img src={post.authorAvatar} alt={post.author} className="p-1 w-8 h-8 rounded-full mr-2" />
+        By <img src={post.authorAvatar} alt={post.author} className="p-1 w-20 h-20 rounded-full mr-2" />
         <span>{post.author} <FontAwesomeIcon icon={faCalendarAlt} /> {formatDate(post.date)}</span>
       </div>
       <p className="text-lg text-gray-700 mb-6">{post.description}</p>
@@ -82,22 +82,15 @@ const FullBlogPost: React.FC = () => {
         {documentToReactComponents(post.content, options)}
       </div>
       <div>
-        {post.category && post.category.length > 0 && (
-          <div>
-            <h4>Categories:</h4>
-            <ul>
-              {post.category.map((category) => (
-                <li key={post.category}>{post.category}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+
+        
       </div>
       {/* Add RelatedPosts Component Here */
       }
       
     </div>
   );
+  
 };
 
 export default FullBlogPost;

@@ -15,13 +15,17 @@ export const Footer = () => {
               <li><a href="/about" className="text-muted-foreground hover:text-foreground">About</a></li>
               <li><a href="/terms" className="text-muted-foreground hover:text-foreground">Terms</a></li>
               <li><a href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</a></li>
+              <li><a href="/disclaimer" className="text-muted-foreground hover:text-foreground">Disclaimer</a></li>
+             
+
+              
             </ul>
           </div>
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <p className="text-sm text-muted-foreground">
-              Email: contact@msgrecords.com<br />
-              Phone: (555) 123-4567
+              Email: moe@msgrecords.com<br />
+              Phone: (385) 312-0323
             </p>
           </div>
         </div>
