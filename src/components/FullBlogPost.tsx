@@ -28,7 +28,7 @@ const FullBlogPost: React.FC = () => {
   }, [slug]);
 
   if (!post) {
-    return <p className="text-center text-red-600">Blog post not found</p>;
+    return <p className="pt-20 text-center text-red-600">Blog post not found</p>;
   }
 
   const options = {
